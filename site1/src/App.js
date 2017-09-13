@@ -4,9 +4,7 @@ import './App.css';
 import {TodoForm,TodoList} from './componets/todo';
 import {addTodo,generateId} from './lib/todoHelpers'
 class App extends Component {
-  constructor(){
-    super()
-    this.state={
+   state={
       todos:[
         { id:1,name:'Learn JSX1',isComplete:true},
         { id:2,name:'Build an Awesome App',isComplete:false},
@@ -14,10 +12,8 @@ class App extends Component {
     
       ],currentTodo:''
     }
-    this.handleInputChange=this.handleInputChange.bind(this);
-      this.handleSubmit=this.handleSubmit.bind(this);
-  }
-  handleSubmit(evt)
+ 
+  handleSubmit=(evt)=>
   {
    evt.preventDefault();
    const newid=generateId();
@@ -26,28 +22,39 @@ class App extends Component {
    this.setState({
 
     todos: updateTodos,
-    currentTodo:''
+    currentTodo:'',
+    errorMessage:''
    });
 
   }
-  handleInputChange(evt){
+  handleEmptySubmit=(evt)=>
+  {
+    evt.preventDefault();
+    this.setState({
+      errorMessage:'empty string'
+    })
+  }
+
+  handleInputChange=(evt)=>{
     this.setState({
       currentTodo:evt.target.value
     });
-   
 
   }
   render() {
+    const   submitHandler=this.state.currentTodo?this.handleSubmit:this.handleEmptySubmit;
     return (
+    
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>React Todos</h2>
         </div>
           <div className="Todo-App">
+            {this.state.errorMessage && <span className='error'>{this.state.errorMessage}</span>}
           <TodoForm handleInputChange={this.handleInputChange} 
           currentTodo={this.state.currentTodo}
-          handleSubmit={this.handleSubmit}/>
+          handleSubmit={submitHandler}/>
           <TodoList todos={this.state.todos}/>
         
           </div>

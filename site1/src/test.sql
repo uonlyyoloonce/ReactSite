@@ -1,38 +1,56 @@
-DECLARE
-v_bookid INTEGER;
-v_hasIndigo INTEGER;
+select count(*) from book
 
-BEGIN
-select book_id into v_bookid from book where isbn = a_isbn;
-if v_bookid is null then
-    raise notice 'bookid is null';
-    insert into book(isbn,update_date) values(a_isbn,to_number(to_char(current_timestamp,'YYYYMMDD'),'9999999999'));
-    select book_id into v_bookid from book where isbn = a_isbn;
-end if;
-raise notice 'bookid is %', v_bookid;
-select book_id
-into v_hasIndigo 
-from indigo where book_id = v_bookid;
-if v_hasIndigo is null then
-    
-        insert into indigo(book_id, price_date,isbn,price,availability,publisher,instockquantity,cateid)
-        values(v_bookid, to_number(to_char(current_timestamp,'YYYYMMDD'),'9999999999'),a_isbn,a_price,a_availability,a_instockquantity,a_cateid);
- 
-else
-    update indigo set
-            price_date = to_number(to_char(current_timestamp,'YYYYMMDD'),'9999999999'),
-           price = a_price,
-           availability = a_availability,
-          
-             instockquantity =a_instockquantity,
-            used_offers =a_totalUsed,
-           cateid=a_primeprice-v_cateid,
-           where book_id = v_bookid;
-end if;
+select count(*) from book where 
+isbn like 'b%' or isbn like 'B%'
 
-
-END;
+delete from book 
+where isbn like 'b%' or isbn like 'B%'
 
 
 
+update amz_ca_latest 
+set min_prime_price=com.maxprice
+from (select book_id,min(prime_price) maxprice
+      from amz_ca 
+      group by book_id
+      ) com
+      where com.book_id=amz_ca_latest.book_id
+      
+update amz_com_latest 
+set minrank=com.maxprice
+from (select book_id,min(rank)maxprice
+      from amz_com 
+      group by book_id
+      ) com
+      where com.book_id=amz_com_latest.book_id
+      
+select b.isbn ,ca.min_prime_price from amz_com_latest com
+left join amz_ca_latest ca 
+on ca.book_id=com.book_id
+left join book b
+on b.book_id=com.book_id
 
+where com.minrank<500000 
+       and (com.min_prime_price+com.max_prime_price)/2-ca.min_prime_price>8000
+     -- and (com.min_prime_price+com.max_prime_price)/2-ca.min_prime_price<15000
+      and ca.prime_price>0 and ca.min_prime_price > 0
+      
+      
+select ca.* from amz_ca ca
+left join book b
+on ca.book_id=b.book_id
+where b.isbn='0387848711'
+order by update_date 
+
+select com.* from amz_com com
+left join book b
+on com.book_id=b.book_id
+where b.isbn='3319219596'
+order by update_date 
+
+
+select ind.isbn,amz.rank,ind.price from indigo ind
+left join amz_com_latest amz
+on amz.book_id=ind.book_id
+where amz.prime_price-ind.price > 10000
+      and ind.availability=true
