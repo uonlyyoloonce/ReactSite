@@ -20,6 +20,13 @@ class App extends Component {
     this.setState({todos:updatedTodos});
  
     }
+    handleRemove=(id)=>{
+      console.log('id : '+id);
+     const removedTodos=removeTodo(this.state.todos,id);
+     console.log( JSON.stringify( removedTodos))
+     this.setState({todos:removedTodos});
+
+    }
   handleSubmit=(evt)=>
   {
    evt.preventDefault();
@@ -62,7 +69,11 @@ class App extends Component {
           <TodoForm handleInputChange={this.handleInputChange} 
           currentTodo={this.state.currentTodo}
           handleSubmit={submitHandler}/>
-          <TodoList  handleToggle ={this.handleToggle } todos={this.state.todos}/>
+          <TodoList  
+          handleToggle ={this.handleToggle } 
+          todos={this.state.todos}
+          handleRemove={this.handleRemove}
+          />
         
           </div>
       </div>

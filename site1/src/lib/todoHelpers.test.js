@@ -1,4 +1,4 @@
-import {addTodo,findById,updateById} from './todoHelpers'
+import {addTodo,findById,updateById,removeTodo} from './todoHelpers'
 // test('addTodo should add the passed todo to the list', () => {
 //   const startTodos = [
 //     {id:1, name: 'one', isComplete: false},
@@ -50,7 +50,7 @@ test.skip('findById should return expected item from an array', () => {
 
 })
 
-test('updateById should update expected item from an array', () => {
+test.skip('updateById should update expected item from an array', () => {
   const startTodos = [
     {id:1, name: 'one', isComplete: false},
     {id:2, name: 'two', isComplete: false},
@@ -64,6 +64,25 @@ test('updateById should update expected item from an array', () => {
    {id:3, name: 'three', isComplete: false}
   ]
   const result = updateById(2,startTodos, inputTodo);
+
+  expect(result).toEqual(expected);
+  expect(result).not.toBe(expected);
+})
+
+test('updateById should delete expected item from an array', () => {
+  const startTodos = [
+    {id:1, name: 'one', isComplete: false},
+    {id:2, name: 'two', isComplete: false},
+   {id:3, name: 'three', isComplete: false}
+  ]
+ 
+  //const inputTodo= {id:2, name: 'two', isComplete: true}
+  const expected = [
+    {id:1, name: 'one', isComplete: false},
+    
+   {id:3, name: 'three', isComplete: false}
+  ]
+  const result = removeTodo(startTodos,2);
 
   expect(result).toEqual(expected);
   expect(result).not.toBe(expected);
