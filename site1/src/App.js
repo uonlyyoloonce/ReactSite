@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {TodoForm,TodoList} from './componets/todo';
+import {TodoForm,TodoList,Footer} from './componets/todo';
 import {addTodo,generateId,findById,toggleTodo,updateTodo,removeTodo} from './lib/todoHelpers'
 class App extends Component {
    state={
@@ -74,7 +74,7 @@ class App extends Component {
           todos={this.state.todos}
           handleRemove={this.handleRemove}
           />
-        
+          <Footer/>
           </div>
       </div>
     );
