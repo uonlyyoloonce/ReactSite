@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {TodoForm,TodoList,Footer} from './componets/todo';
-import {addTodo,generateId,findById,toggleTodo,updateTodo,removeTodo} from './lib/todoHelpers'
+import {addTodo,generateId,findById,toggleTodo,updateTodo,removeTodo,filterTodos} from './lib/todoHelpers'
 class App extends Component {
    state={
       todos:[
@@ -19,6 +19,11 @@ class App extends Component {
     const updatedTodos=updateTodo(this.state.todos,toggled);
     this.setState({todos:updatedTodos});
  
+    }
+
+    static contextTypes={
+     route:React.PropTypes.string
+
     }
     handleRemove=(id)=>{
       console.log('id : '+id);
@@ -57,6 +62,7 @@ class App extends Component {
   }
   render() {
     const   submitHandler=this.state.currentTodo?this.handleSubmit:this.handleEmptySubmit;
+    const displayTodos=filterTodos(this.state.todos,this.context.route);
     return (
     
       <div className="App">
@@ -71,7 +77,7 @@ class App extends Component {
           handleSubmit={submitHandler}/>
           <TodoList  
           handleToggle ={this.handleToggle } 
-          todos={this.state.todos}
+          todos={displayTodos}
           handleRemove={this.handleRemove}
           />
           <Footer/>

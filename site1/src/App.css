@@ -53,5 +53,18 @@ li:hover span.delete-item{
   to { transform: rotate(360deg); }
 }
 .error
-{color: red;
-  }
+{
+  color: red;
+}
+.Footer a
+{
+ padding-right: 2px;
+ padding-left: 2px;
+
+}
+
+.Footer a.active
+{
+font-weight: bold;
+
+}

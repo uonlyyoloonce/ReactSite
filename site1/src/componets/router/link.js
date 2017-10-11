@@ -1,9 +1,19 @@
 import React,{Component} from 'react'
 
 export class Link extends Component{
-      render(){
+    static contextTypes={
+        route:React.PropTypes.string,
+        linkHandler:React.PropTypes.func
+    }
 
-        return <a href="#">{this.props.chirdren}</a>
+    handleClick=(evt)=>{
+     evt.preventDefault();
+    // window.history.pushState(null,'',this.props.to);
+     this.context.linkHandler(this.props.to);
+    };
+      render(){
+     const activeClass=this.context.route===this.props.to ?'active':'';
+        return <a href= '#' onClick={this.handleClick} className={activeClass}  >{this.props.children}</a>
 
     }
 }
